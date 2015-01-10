@@ -2,30 +2,23 @@ package emailtest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
-import javax.xml.namespace.QName;
-
-import com.tigerlily.client.Cluster;
-import com.tigerlily.client.ClusterService;
+// use any SOAP service. This one was generated using
+//   wsimport -d bin -s src -keep -extension http://www.webservicex.net/stockquote.asmx?wsdl
+import net.webservicex.StockQuote;
+import net.webservicex.StockQuoteSoap;
 
 public class Emailtest {
 
-	public static void startClusterService() {
-
-		Cluster clusterClient = null;
-		URL url = ClassLoader.getSystemClassLoader().getResource(
-				"ClusterService.wsdl");
-		
-		ClusterService tl = new ClusterService(url, new QName(
-				"http://service.tl.com/", "ClusterService"));
-
-		clusterClient = tl.getClusterPort();
+	public static void stockQuoteTest() {
+		StockQuote stockService = new StockQuote();
+		StockQuoteSoap s = stockService.getStockQuoteSoap12();
+		// We don't actually need to call SOAP to demonstrate the problem
+		// System.out.println("quote is "+s.getQuote("GOOG"));
 	}
-
+	
 	public static void testMime() throws MessagingException {
 		String msg = "\u0287x\u01DD\u0287 u\u028Dop \u01DDp\u1D09sdn";
 		
@@ -49,8 +42,10 @@ public class Emailtest {
 		try {
 			System.out.println("Before call to SOAP:");
 			testMime();
+			
+			stockQuoteTest();
+			
 			System.out.println("After call to SOAP:");
-			startClusterService();
 			testMime();
 		} catch (MessagingException e) {
 			e.printStackTrace();
